@@ -5,7 +5,11 @@ import axios from"axios";
 
 const app = express();
 app.use(express.json());
-app.use(cors({ origin: "*" }));
+app.use(cors({
+    origin: 'https://mydhvani.com',  // Change this to your frontend domain
+    methods: ['GET', 'POST'],  // Allow only necessary HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 const API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${API_KEY}`;

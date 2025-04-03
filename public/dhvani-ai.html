@@ -37,14 +37,41 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        .coming-soon-box {
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 10px;
-            padding: 40px;
+        .chat-container {
             width: 50%;
             max-width: 600px;
-            height: auto;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            padding: 20px;
             border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .chat-box {
+            height: 400px;
+            overflow-y: auto;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .user-message, .bot-message {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 8px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background: #4CAF50;
+            align-self: flex-end;
+        }
+        .bot-message {
+            background: #333;
+            align-self: flex-start;
+        }
+        .input-container {
+            display: flex;
+            gap: 10px;
         }
     </style>
 </head>
@@ -61,14 +88,15 @@
     </header>
 
     <main class="flex-grow flex flex-col items-center justify-center text-center">
-        <h2 class="text-5xl font-bold mb-6 animate-fadeInUp">Dhvani AI</h2>
-        <p class="text-lg mb-8 max-w-2xl animate-fadeInUp delay-200">
-            Our chatbot is coming soon! Stay tuned for the full Dhvani AI experience.
-        </p>
-
-        <!-- Coming Soon Box -->
-        <div class="coming-soon-box">
-            <p class="text-gray-300 text-xl">Dhvani AI is under development. The full chatbot experience will be live soon!</p>
+        <h2 class="text-5xl font-bold mb-6">Dhvani AI</h2>
+        
+        <!-- Chatbot UI -->
+        <div class="chat-container">
+            <div id="chat-box" class="chat-box"></div>
+            <div class="input-container">
+                <input id="user-input" type="text" placeholder="Ask Dhvani AI..." class="w-full px-4 py-2 rounded bg-gray-800 text-white" onkeypress="handleKeyPress(event)">
+                <button onclick="sendMessage()" class="px-4 py-2 bg-blue-500 text-white rounded">Send</button>
+            </div>
         </div>
     </main>
 
@@ -76,5 +104,51 @@
         © 2025 Dhvani. All Rights Reserved.
     </footer>
 
+    <script>
+        async function sendMessage() {
+            let userInput = document.getElementById("user-input").value;
+            let chatBox = document.getElementById("chat-box");
+
+            if (!userInput.trim()) return;
+
+            chatBox.innerHTML += `<div class="text-right text-green-400 mb-2">You: ${userInput}</div>`;
+            document.getElementById("user-input").value = "";
+
+            // Show loading message
+            let loadingMessage = document.createElement("div");
+            loadingMessage.className = "text-left text-gray-400 mb-2";
+            loadingMessage.innerText = "AI: Typing...";
+            chatBox.appendChild(loadingMessage);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            try {
+                const response = await fetch("http://localhost:5000/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: userInput })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    loadingMessage.remove();
+                    chatBox.innerHTML += `<div class="text-left text-gray-400 mb-2">AI: ${data.response}</div>`;
+                } else {
+                    loadingMessage.remove();
+                    chatBox.innerHTML += `<div class="text-left text-red-400 mb-2">AI: Error fetching response</div>`;
+                }
+            } catch (error) {
+                loadingMessage.remove();
+                chatBox.innerHTML += `<div class="text-left text-red-400 mb-2">AI: Server unavailable</div>`;
+            }
+
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        }
+    </script>
 </body>
 </html>

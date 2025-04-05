@@ -7,101 +7,95 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            background: url('nbg.jpg') no-repeat center center fixed;
-            background-size: cover;
+            background: #121212;
             font-family: 'Roboto', sans-serif;
             color: white;
-            animation: fadeIn 1s ease-in-out;
-        }
-        .dhvani-text {
-            font-family: "Century Gothic", sans-serif;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-        .nav-btn {
-            transition: transform 0.3s ease, background-color 0.3s ease;
-        }
-        .nav-btn:hover {
-            transform: scale(1.05);
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        .footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            text-align: center;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.7);
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        .chat-container {
-            width: 50%;
-            max-width: 600px;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 10px;
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 0;
         }
         .chat-box {
-            height: 400px;
+            flex-grow: 1;
             overflow-y: auto;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            padding-bottom: 10px;
-            margin-bottom: 10px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
+            gap: 10px;
         }
-        .user-message, .bot-message {
-            padding: 10px;
-            margin: 5px;
-            border-radius: 8px;
+        .message {
             max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 10px;
             word-wrap: break-word;
+            animation: fadeIn 0.3s ease-in-out;
         }
         .user-message {
-            background: #4CAF50;
             align-self: flex-end;
+            background: #4CAF50;
+            color: white;
         }
         .bot-message {
-            background: #333;
             align-self: flex-start;
+            background: #333;
+            color: white;
         }
         .input-container {
             display: flex;
             gap: 10px;
+            border-top: 1px solid #333;
+            padding: 20px;
+            background: #1E1E1E;
+        }
+        .chat-input {
+            flex-grow: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            background: #2D2D2D;
+            color: white;
+            outline: none;
+        }
+        .send-button {
+            background: #4CAF50;
+            padding: 12px 18px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .send-button:hover {
+            background: #3B8E40;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body class="h-screen flex flex-col">
-    <header class="flex justify-between items-center p-6 bg-black bg-opacity-50">
-        <h1 class="text-3xl cursor-pointer dhvani-text" onclick="window.location.href='index.html'">Dhvani</h1>
-        <nav>
-            <button class="nav-btn px-5 py-2 mx-2 rounded" onclick="window.location.href='index.html'">Home</button>
-            <button class="nav-btn px-5 py-2 mx-2 rounded" onclick="window.location.href='about.html'">About</button>
-            <button class="nav-btn px-5 py-2 mx-2 rounded" onclick="window.location.href='shop.html'">Shop</button>
-            <button class="nav-btn px-5 py-2 mx-2 rounded" onclick="window.location.href='contact.html'">Contact</button>
-            <button class="nav-btn px-5 py-2 mx-2 rounded" onclick="window.location.href='login.html'">Login</button>
+<body class="flex flex-col h-screen">
+
+    <!-- Header -->
+    <header class="w-full flex justify-between items-center p-4 bg-black bg-opacity-50 fixed top-0 z-10">
+        <h1 class="text-2xl font-bold cursor-pointer" onclick="window.location.href='index.html'">Dhvani</h1>
+        <nav class="flex gap-4">
+            <button class="nav-btn text-white" onclick="window.location.href='index.html'">Home</button>
+            <button class="nav-btn text-white" onclick="window.location.href='about.html'">About</button>
+            <button class="nav-btn text-white" onclick="window.location.href='shop.html'">Shop</button>
+            <button class="nav-btn text-white" onclick="window.location.href='contact.html'">Contact</button>
+            <button class="nav-btn text-white" onclick="window.location.href='login.html'">Login</button>
         </nav>
     </header>
 
-    <main class="flex-grow flex flex-col items-center justify-center text-center">
-        <h2 class="text-5xl font-bold mb-6">Dhvani AI</h2>
-        
-        <!-- Chatbot UI -->
-        <div class="chat-container">
-            <div id="chat-box" class="chat-box"></div>
-            <div class="input-container">
-                <input id="user-input" type="text" placeholder="Ask Dhvani AI..." class="w-full px-4 py-2 rounded bg-gray-800 text-white" onkeypress="handleKeyPress(event)">
-                <button onclick="sendMessage()" class="px-4 py-2 bg-blue-500 text-white rounded">Send</button>
-            </div>
+    <!-- Main Chat Area -->
+    <main class="flex flex-col pt-20 flex-grow">
+        <div id="chat-box" class="chat-box"></div>
+        <div class="input-container">
+            <input id="user-input" type="text" placeholder="Ask Dhvani AI..." class="chat-input" onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()" class="send-button">Send</button>
         </div>
     </main>
 
-    <footer class="footer text-sm text-gray-300">
-        © 2025 Dhvani. All Rights Reserved.
+    <!-- Footer -->
+    <footer class="w-full text-center py-3 bg-black bg-opacity-50">
+        <p class="text-gray-300 text-sm">© 2025 Dhvani. All Rights Reserved.</p>
     </footer>
 
     <script>
@@ -111,12 +105,18 @@
 
             if (!userInput.trim()) return;
 
-            chatBox.innerHTML += `<div class="text-right text-green-400 mb-2">You: ${userInput}</div>`;
+            // Append user message
+            let userMessage = document.createElement("div");
+            userMessage.className = "message user-message";
+            userMessage.innerText = userInput;
+            chatBox.appendChild(userMessage);
+
             document.getElementById("user-input").value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
 
             // Show loading message
             let loadingMessage = document.createElement("div");
-            loadingMessage.className = "text-left text-gray-400 mb-2";
+            loadingMessage.className = "message bot-message";
             loadingMessage.innerText = "AI: Typing...";
             chatBox.appendChild(loadingMessage);
             chatBox.scrollTop = chatBox.scrollHeight;
@@ -131,14 +131,23 @@
                 if (response.ok) {
                     const data = await response.json();
                     loadingMessage.remove();
-                    chatBox.innerHTML += `<div class="text-left text-gray-400 mb-2">AI: ${data.response}</div>`;
+                    let botMessage = document.createElement("div");
+                    botMessage.className = "message bot-message";
+                    botMessage.innerText = `AI: ${data.response}`;
+                    chatBox.appendChild(botMessage);
                 } else {
                     loadingMessage.remove();
-                    chatBox.innerHTML += `<div class="text-left text-red-400 mb-2">AI: Error fetching response</div>`;
+                    let errorMessage = document.createElement("div");
+                    errorMessage.className = "message bot-message";
+                    errorMessage.innerText = "AI: Error fetching response.";
+                    chatBox.appendChild(errorMessage);
                 }
             } catch (error) {
                 loadingMessage.remove();
-                chatBox.innerHTML += `<div class="text-left text-red-400 mb-2">AI: Server unavailable</div>`;
+                let errorMessage = document.createElement("div");
+                errorMessage.className = "message bot-message";
+                errorMessage.innerText = "AI: Server unavailable.";
+                chatBox.appendChild(errorMessage);
             }
 
             chatBox.scrollTop = chatBox.scrollHeight;
@@ -150,5 +159,6 @@
             }
         }
     </script>
+
 </body>
 </html>
